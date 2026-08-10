@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Card Creator</title>
+    <title>Modern Birthday Card Creator</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts for UI and Card Text -->
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Poppins:wght@900;800;600&display=swap" rel="stylesheet">
-    <!-- html2canvas for saving the card -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- canvas-confetti for celebrations -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <div class="app-container">
-        <!-- Input Section -->
+        <!-- Controls Section -->
         <div class="controls-section">
-            <h1>Create a Birthday Card 🎉</h1>
-            <p>Customize a beautiful card and share the joy.</p>
+            <h1>Card Creator ✨</h1>
+            <p>Design a beautiful, modern birthday card.</p>
             
             <form id="cardForm">
                 <div class="form-group">
@@ -26,13 +23,30 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="birthdayMessage">Birthday Message</label>
-                    <textarea id="birthdayMessage" rows="4" placeholder="Wishing you the best day ever!..." required></textarea>
+                    <label for="templateSelect">Need inspiration?</label>
+                    <select id="templateSelect"></select>
                 </div>
 
                 <div class="form-group">
-                    <label for="imageUpload">Upload a Photo (Optional)</label>
+                    <label for="birthdayMessage">Birthday Message</label>
+                    <textarea id="birthdayMessage" rows="4" placeholder="Write your message here..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="imageUpload">Upload a Photo</label>
                     <input type="file" id="imageUpload" accept="image/*">
+                </div>
+
+                <!-- Customization Features -->
+                <div class="color-controls">
+                    <div class="form-group">
+                        <label for="cardBgColor">Card Color</label>
+                        <input type="color" id="cardBgColor" value="#ffffff">
+                    </div>
+                    <div class="form-group">
+                        <label for="accentColor">Accent Color</label>
+                        <input type="color" id="accentColor" value="#ff6b6b">
+                    </div>
                 </div>
 
                 <button type="button" id="generateBtn" class="primary-btn">Celebrate & Generate! 🎈</button>
@@ -41,31 +55,29 @@
             <div id="actionButtons" class="action-buttons hidden">
                 <button type="button" id="downloadBtn" class="secondary-btn">Download Card</button>
                 <button type="button" id="emailBtn" class="secondary-btn">Share via Email</button>
-                <p class="hint">Download the card first, then attach it to the email!</p>
             </div>
         </div>
 
         <!-- Preview Section -->
         <div class="preview-section">
-            <div id="cardCaptureArea" class="card">
-                <div class="card-inner">
-                    <div class="card-header">
-                        <h2>Happy Birthday, <span id="previewName">Name</span>!</h2>
+            <div id="cardCaptureArea" class="card-wrapper">
+                <div class="card-modern">
+                    <div class="card-top-accent"></div>
+                    <div class="card-image-wrapper">
+                        <img id="previewImage" src="https://placehold.co/400x400/f0f0f0/cccccc?text=Photo" alt="Birthday Person">
                     </div>
-                    <div class="card-image-container">
-                        <img id="previewImage" src="https://placehold.co/400x400/ffe4e1/ff69b4?text=Add+a+Photo" alt="Birthday Person">
-                    </div>
-                    <div class="card-body">
+                    <div class="card-content">
+                        <h2>Happy Birthday, <br><span id="previewName">Name</span>!</h2>
+                        <div class="divider"></div>
                         <p id="previewMessage">Your message will appear here...</p>
-                    </div>
-                    <div class="card-footer">
-                        <p>Made with ❤️</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Scripts loaded in order -->
+    <script src="messages.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
