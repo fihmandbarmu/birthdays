@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Card Creator</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for UI and Card Text -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- html2canvas for saving the card -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- canvas-confetti for celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Input Section -->
+        <div class="controls-section">
+            <h1>Create a Birthday Card 🎉</h1>
+            <p>Customize a beautiful card and share the joy.</p>
+            
+            <form id="cardForm">
+                <div class="form-group">
+                    <label for="recipientName">Who is celebrating?</label>
+                    <input type="text" id="recipientName" placeholder="e.g. Sarah" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthdayMessage">Birthday Message</label>
+                    <textarea id="birthdayMessage" rows="4" placeholder="Wishing you the best day ever!..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="imageUpload">Upload a Photo (Optional)</label>
+                    <input type="file" id="imageUpload" accept="image/*">
+                </div>
+
+                <button type="button" id="generateBtn" class="primary-btn">Celebrate & Generate! 🎈</button>
+            </form>
+
+            <div id="actionButtons" class="action-buttons hidden">
+                <button type="button" id="downloadBtn" class="secondary-btn">Download Card</button>
+                <button type="button" id="emailBtn" class="secondary-btn">Share via Email</button>
+                <p class="hint">Download the card first, then attach it to the email!</p>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <div id="cardCaptureArea" class="card">
+                <div class="card-inner">
+                    <div class="card-header">
+                        <h2>Happy Birthday, <span id="previewName">Name</span>!</h2>
+                    </div>
+                    <div class="card-image-container">
+                        <img id="previewImage" src="https://placehold.co/400x400/ffe4e1/ff69b4?text=Add+a+Photo" alt="Birthday Person">
+                    </div>
+                    <div class="card-body">
+                        <p id="previewMessage">Your message will appear here...</p>
+                    </div>
+                    <div class="card-footer">
+                        <p>Made with ❤️</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
