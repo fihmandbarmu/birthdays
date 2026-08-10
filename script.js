@@ -1,7 +1,15 @@
+// Ensure messages.js is loaded first in HTML
+
 // DOM Elements
 const nameInput = document.getElementById('recipientName');
 const messageInput = document.getElementById('birthdayMessage');
 const imageInput = document.getElementById('imageUpload');
+const templateSelect = document.getElementById('templateSelect');
+
+// Color controls
+const cardBgColor = document.getElementById('cardBgColor');
+const accentColor = document.getElementById('accentColor');
+const rootElement = document.documentElement; // For CSS variables
 
 const previewName = document.getElementById('previewName');
 const previewMessage = document.getElementById('previewMessage');
@@ -12,7 +20,18 @@ const actionButtons = document.getElementById('actionButtons');
 const downloadBtn = document.getElementById('downloadBtn');
 const emailBtn = document.getElementById('emailBtn');
 
-// Real-time Preview Updates
+// 1. Initialize Templates
+function loadTemplates() {
+    messageTemplates.forEach((template, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = template.label;
+        templateSelect.appendChild(option);
+    });
+}
+loadTemplates();
+
+// 2. Event Listeners for Content Updates
 nameInput.addEventListener('input', (e) => {
     previewName.textContent = e.target.value || 'Name';
 });
@@ -21,7 +40,34 @@ messageInput.addEventListener('input', (e) => {
     previewMessage.textContent = e.target.value || 'Your message will appear here...';
 });
 
-// Handle Image Upload via FileReader API
+templateSelect.addEventListener('change', (e) => {
+    const selectedTemplate = messageTemplates[e.target.value];
+    if (selectedTemplate && selectedTemplate.text) {
+        messageInput.value = selectedTemplate.text;
+        previewMessage.textContent = selectedTemplate.text;
+    }
+});
+
+// 3. Event Listeners for Color Customization
+cardBgColor.addEventListener('input', (e) => {
+    rootElement.style.setProperty('--card-bg', e.target.value);
+    
+    // Auto-adjust text color based on background brightness (simple threshold)
+    const hex = e.target.value.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    
+    // If background is dark, make text light, and vice versa
+    rootElement.style.setProperty('--card-text', (yiq >= 128) ? '#2d3748' : '#ffffff');
+});
+
+accentColor.addEventListener('input', (e) => {
+    rootElement.style.setProperty('--card-accent', e.target.value);
+});
+
+// 4. Handle Image Upload
 imageInput.addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -33,71 +79,56 @@ imageInput.addEventListener('change', function(e) {
     }
 });
 
-// Generate Button Logic
+// 5. Generate Button Logic (Confetti)
 generateBtn.addEventListener('click', () => {
-    // Basic validation
     if (!nameInput.value || !messageInput.value) {
         alert("Please enter a name and a message first!");
         return;
     }
-
-    // Trigger Confetti
     triggerConfetti();
-
-    // Show Action Buttons
     actionButtons.classList.remove('hidden');
     generateBtn.textContent = "Update Card 🎉";
 });
 
-// Download Logic using html2canvas
+// 6. Download Logic
 downloadBtn.addEventListener('click', () => {
     const cardElement = document.getElementById('cardCaptureArea');
-    
-    // Temporarily adjust styles for perfect capture if needed
-    downloadBtn.textContent = "Generating...";
+    const originalText = downloadBtn.textContent;
+    downloadBtn.textContent = "Processing...";
     
     html2canvas(cardElement, {
-        scale: 2, // High resolution
-        useCORS: true, // Allow cross-origin images
+        scale: 2, 
+        useCORS: true,
         backgroundColor: null 
     }).then(canvas => {
-        // Create a download link
         const link = document.createElement('a');
-        link.download = `${nameInput.value || 'Birthday'}_Card.png`;
+        link.download = `${nameInput.value || 'Modern_Birthday'}_Card.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
-        downloadBtn.textContent = "Download Card";
+        downloadBtn.textContent = originalText;
     });
 });
 
-// Email Logic
+// 7. Email Logic
 emailBtn.addEventListener('click', () => {
     const subject = encodeURIComponent(`Happy Birthday, ${nameInput.value}!`);
-    const body = encodeURIComponent(`Hi ${nameInput.value},\n\nI made a special birthday card for you! I have attached it to this email.\n\n${messageInput.value}`);
-    
-    // Opens default email client (Outlook, Apple Mail, Gmail if configured)
+    const body = encodeURIComponent(`Hi ${nameInput.value},\n\nI made a special modern birthday card just for you! I've attached it to this email.\n\nBest,\n[Your Name]`);
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
 });
 
-// Confetti Animation Function
+// 8. Confetti Animation
 function triggerConfetti() {
-    var duration = 3 * 1000;
+    var duration = 2.5 * 1000;
     var animationEnd = Date.now() + duration;
     var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    function randomInRange(min, max) {
-        return Math.random() * (max - min) + min;
-    }
+    function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
     var interval = setInterval(function() {
         var timeLeft = animationEnd - Date.now();
-
-        if (timeLeft <= 0) {
-            return clearInterval(interval);
-        }
+        if (timeLeft <= 0) return clearInterval(interval);
 
         var particleCount = 50 * (timeLeft / duration);
-        
         confetti(Object.assign({}, defaults, { 
             particleCount,
             origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
